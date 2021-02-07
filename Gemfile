@@ -18,6 +18,9 @@ gem 'jbuilder', '~> 2.7'
 gem 'pry', '~> 0.13.1'
 # React
 gem 'react-rails'
+
+gem 'bundler-audit', require: false
+gem 'ruby_audit', require: false
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
