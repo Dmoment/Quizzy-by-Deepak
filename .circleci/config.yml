@@ -6,6 +6,14 @@ jobs:
 
     docker:
       - image: circleci/ruby:2.7.0-node-browsers
+        environment:
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          DATABASE_URL: postgres://postgres:password@localhost:5432/tech_cast_test
+          RAILS_ENV: test
+          REDIS_URL: redis://127.0.0.1:6379
+      - image: circleci/postgres:11-alpine
+      - image: circleci/redis:3.2-alpine
 
     #application directory change it with your application directory name
     working_directory: ~/quizzy
