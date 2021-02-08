@@ -3,7 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
 
   def setup
-    @user = User.new(first_name: "Sam", last_name: "Smith", email: "sam@example.com", role: 0, password: "password")
+    @user = User.new(first_name: "Sam", last_name: "Smith", email: "sam@example.com", role: 0, password: "password", password_confirmation: "password")
   end
 
   test "user should be valid" do
@@ -11,17 +11,17 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "first_name should be present" do
-    @user.first_name = " "
+    @user.first_name = nil
     assert_not @user.valid?
   end
 
   test "last_name should be present" do
-    @user.last_name = " "
+    @user.last_name = nil
     assert_not @user.valid?
   end
 
   test "email should be present" do
-    @user.email = " "
+    @user.email = nil
     assert_not @user.valid?
   end
 
@@ -67,6 +67,31 @@ class UserTest < ActiveSupport::TestCase
   test "user should have a valid role either standard: 0 or administrator: 1" do
     @user.role = 1
     assert @user.valid?
+  end
+
+  test "password can't be blank" do
+    @user.password = nil
+    assert_not @user.valid?
+    assert_equal ["Password can't be blank"],
+                @user.errors.full_messages
+  end
+
+  test "password_confirmation can't be blank" do
+    @user.password_confirmation = nil
+    assert_not @user.save
+    assert_equal ["Password confirmation can't be blank"],
+                  @user.errors.full_messages
+  end
+
+  test "password should be of minimum length 6" do
+    @user.password = "s"
+    assert_not @user.valid?
+  end
+
+  test "password and password_confirmation should match" do
+    @user.password = "password123"
+    @user.password_confirmation = "password"
+    assert_not @user.valid?
   end
 
 end
