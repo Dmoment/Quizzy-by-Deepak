@@ -6,6 +6,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, 
                     format: {with: VALID_EMAIL_REGEX}
   before_save :normalize_email
+  enum role: { standard: 0, administrator: 1 }
   
   def normalize_email
     self.email.downcase!
