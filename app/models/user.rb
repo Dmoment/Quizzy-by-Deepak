@@ -8,6 +8,8 @@ class User < ApplicationRecord
   before_save :normalize_email
   enum role: { standard: 0, administrator: 1 }
   has_secure_password
+  validates :password, presence: true, confirmation: true, length: { minimum: 6 }
+  validates :password_confirmation, presence: true, on: :create
   
   def normalize_email
     self.email.downcase!
