@@ -1,0 +1,52 @@
+version: 2.1
+jobs:
+  build:
+    #No. of servers/machines
+    parallelism: 1
+
+    docker:
+      - image: circleci/ruby:2.7.0-node-browsers
+        environment:
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          DATABASE_URL: postgres://postgres:password@localhost:5432/tech_cast_test
+          RAILS_ENV: test
+          REDIS_URL: redis://127.0.0.1:6379
+      - image: circleci/postgres:11-alpine
+      - image: circleci/redis:3.2-alpine
+
+    #application directory change it with your application directory name
+    working_directory: ~/quizzy
+    environment:
+      TZ: "/usr/share/zoneinfo/America/New_York"
+      RAILS_ENV: "test"
+      RACK_ENV: "test"
+
+    steps:
+      - checkout
+      - run: gem install bundler:2.1.4
+      #install sqlite dependency
+      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
+      # Bundle install
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+
+      # Setup database
+      - run: cp config/database.yml.ci config/database.yml
+      - run: bundle exec rake db:create db:schema:load --trace
+
+      # Yarn install
+      - run: bin/yarn install --cache-folder vendor/node_modules
+
+      # Generate assets
+      - run: bin/webpack
+      - run: bundle exec rails webpacker:compile
+
+      # Unit tests
+      - run:
+          shell: /bin/bash
+          command: bundle exec rake test --trace
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
