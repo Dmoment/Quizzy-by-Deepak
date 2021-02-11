@@ -36,7 +36,6 @@ function Login() {
       .catch((error) => {
         // returns login error Request failed with status code 422
         notifier("error")
-        console.log('login error', error.response.data.message);
     });
   }
 
