@@ -1,4 +1,5 @@
 import axios from "axios";
+import Toastr from "../../components/Toastr/Toastr"
 
 export const setAuthHeaders = (setLoading = () => null) => {
   axios.defaults.headers = {
@@ -18,14 +19,15 @@ export const setAuthHeaders = (setLoading = () => null) => {
 const handleSuccessResponse = response => {
   if (response) {
     response.success = response.status === 200;
-    if (response.data.notice) {
-      Toastr.success(response.data.notice);
+    if (response.data.message) {
+      Toastr.success(response.data.message);
     }
   }
   return response;
 };
 
 const handleErrorResponse = error => {
+  console.log(error.response)
   if (error.response?.status === 401) {
     setToLocalStorage({ authToken: null, email: null, userId: null });
   }

@@ -1,17 +1,10 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import Toastr from "../Toastr/Toastr"
+import {handleErrorResponse, handleSuccessResponse} from "../../src/apis/axios"
 
 
 function Login() {
-  const notifier = (args) =>{
-    if(args == "error"){
-      Toastr.error("Authentication Failed")
-    }else if(args == "success"){
-      Toastr.success("Logged in successfully.");
-    }
-    
-  }
+  
   const [state, setState] = useState({
     email: "",
     password: ""
@@ -29,13 +22,11 @@ function Login() {
     console.log(state);
     axios.post('/sessions', state)
       .then(res => {
-        console.log(res);
-        notifier("success")
-        console.log(res.data);
+        handleSuccessResponse(res)
       })
       .catch((error) => {
         // returns login error Request failed with status code 422
-        notifier("error")
+        handleErrorResponse(error)
     });
   }
 
@@ -67,7 +58,7 @@ function Login() {
           </div>
           <div className="flex items-center justify-between">
             <input className="text-black font-bold py-2 px-4 rounded" 
-            onClick={notifier} type="submit" />
+             type="submit" />
           </div>
       </form>
       

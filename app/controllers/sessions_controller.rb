@@ -11,10 +11,11 @@ class SessionsController < ApplicationController
       render json: {
         status: 200,
         logged_in: true,
-        user: user
+        user: user,
+        message: "Login successfully!"
       }
     else
-      render json: { status: "error", message: "Username or Password does not match." }, status: :unprocessable_entity
+      render json: { error: "Authentication error" }, status: 400
     end
   end
 
