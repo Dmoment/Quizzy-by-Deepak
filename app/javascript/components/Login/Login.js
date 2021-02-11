@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { setAuthHeaders } from "../../src/apis/axios";
+import Toastr from "../Toastr/Toastr"
+
 
 function Login() {
   const notifier = (args) =>{
     if(args == "error"){
-      toast.error("Authentication Failed")
+      Toastr.error("Authentication Failed")
     }else if(args == "success"){
-      toast.success("Login success!")
+      Toastr.success("Logged in successfully.");
     }
     
   }
@@ -27,7 +27,6 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(state);
-    setAuthHeaders();
     axios.post('/sessions', state)
       .then(res => {
         console.log(res);
