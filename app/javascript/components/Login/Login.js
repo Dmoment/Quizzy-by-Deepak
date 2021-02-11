@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { setAuthHeaders } from "../../src/apis/axios";
 
 function Login() {
   const notifier = (args) =>{
@@ -26,6 +27,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(state);
+    setAuthHeaders();
     axios.post('/sessions', state)
       .then(res => {
         console.log(res);
