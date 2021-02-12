@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import {handleErrorResponse, handleSuccessResponse} from "../../src/apis/axios"
+import {handleErrorResponse, handleSuccessResponse} from "../../src/api2/axios"
 
 
 function Login() {
