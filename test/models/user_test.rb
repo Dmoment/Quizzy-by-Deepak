@@ -13,32 +13,44 @@ class UserTest < ActiveSupport::TestCase
   test "first_name should be present" do
     @user.first_name = nil
     assert_not @user.valid?
+    assert_equal ["First name can't be blank"],
+                  @user.errors.full_messages
   end
 
   test "last_name should be present" do
     @user.last_name = nil
     assert_not @user.valid?
+    assert_equal ["Last name can't be blank"],
+                  @user.errors.full_messages
   end
 
   test "email should be present" do
     @user.email = nil
     assert_not @user.valid?
+    assert_equal "Email can't be blank",
+                  @user.errors.full_messages[0]
   end
 
   test "first_name should be of valid lenth" do
     @user.first_name = "s"*51
     assert_not @user.valid?
+    assert_equal ["First name is too long (maximum is 50 characters)"],
+                  @user.errors.full_messages
   end
 
   test "last_name should be of valid lenth" do
     @user.last_name = "s"*51
     assert_not @user.valid?
+    assert_equal ["Last name is too long (maximum is 50 characters)"],
+                  @user.errors.full_messages
   end
 
   test "email should be unique" do
     @user.save!
     @user1 = @user.dup
     assert_not @user1.valid?
+    assert_equal ["Email has already been taken"],
+                  @user1.errors.full_messages
   end
 
   test "email should be loweredcase" do
@@ -46,22 +58,25 @@ class UserTest < ActiveSupport::TestCase
     assert @user.valid?
   end
 
-  test "email should reject invalid email address (Negative test case)" do
+  test "email should reject invalid email address" do
     @user.email = "aaa"
     assert_not @user.valid?
+    assert_equal ["Email is invalid"],
+                  @user.errors.full_messages
   end
 
-  test "email should accept valid email address (Positive test case)" do
+  test "email should accept valid email address" do
     @user.email = "aa1a@example.com"
     assert @user.valid?
   end
  
   test "similar email with difference in uppercase and lowercase" do
-    @user1 = User.new(first_name: "Sammy", last_name: "Oliver", email: "sammy@example.com")
+    @user.save
+    @user1 = @user.dup
     @user1.save
-    @user2 = User.new(first_name: "John", last_name: "Smith", email: "SAMMY@example.com")
-    @user2.save
-    assert_not @user2.valid?
+    assert_not @user1.valid?
+    assert_equal ["Email has already been taken"],
+                  @user1.errors.full_messages
   end
 
   test "user should have a valid role either standard: 0 or administrator: 1" do
@@ -86,12 +101,16 @@ class UserTest < ActiveSupport::TestCase
   test "password should be of minimum length 6" do
     @user.password = "s"
     assert_not @user.valid?
+    assert_equal "Password is too short (minimum is 6 characters)",
+                  @user.errors.full_messages[2]
   end
 
   test "password and password_confirmation should match" do
     @user.password = "password123"
     @user.password_confirmation = "password"
     assert_not @user.valid?
+    assert_equal "Password confirmation doesn't match Password",
+                  @user.errors.full_messages[1]
   end
 
 end
