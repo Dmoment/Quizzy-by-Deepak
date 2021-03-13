@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import axios from 'axios';
+import {Context} from "../Layout/Layout"
+
 
 function Login() {
-  
+  const {setName} = useContext(Context)
   const [state, setState] = useState({
     email: "",
     password: ""
@@ -17,16 +19,16 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(state);
+    
     axios.post('/sessions', state)
       .then(res => {
-        handleSuccessResponse(res)
+        setName(res.data.user.first_name) 
       })
       .catch((error) => {
         // returns login error Request failed with status code 422
-        handleErrorResponse(error)
     });
   }
+
 
   return(
     <React.Fragment>
@@ -58,6 +60,7 @@ function Login() {
             <input className="text-black font-bold py-2 px-4 rounded" 
              type="submit" />
           </div>
+          
       </form>
       
     </div>

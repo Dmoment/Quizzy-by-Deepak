@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Navbar from "../Navbar/Navbar"
 import Login from "../Login/Login"
 
-const Layout = () => {
+
+export const Context = React.createContext({ name: null, setName: () => {} });
+
+export const Layout = () => {
+  const [name, setName] = useState(null)
 
   return(
-      <React.Fragment>
-        <Navbar />
-        <Login />
-      </React.Fragment>
+    <Context.Provider value={{name, setName}}>
+          <Navbar />
+          <Login />
+    </Context.Provider>
   )
     
 }

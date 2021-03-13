@@ -10,14 +10,15 @@ export const setAuthHeaders = (setLoading = () => null) => {
   setLoading(false);
 };
 
+
 const handleSuccessResponse = response => {
-  console.log("success")
   if (response) {
     response.success = response.status === 200;
     if (response.data.message) {
       Toastr.success(response.data.message);
     }
   }
+  console.log("Hiiii")
   return response;
 };
 
